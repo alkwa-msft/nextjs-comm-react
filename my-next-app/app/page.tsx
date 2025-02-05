@@ -1,14 +1,23 @@
-"use client"
+'use client';
 
 import Image from "next/image";
-import { CallClient } from "@azure/communication-calling"
-
-function createCallClient() {
-    var a = new CallClient();
-}
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  createCallClient();
+
+  // oddly when we are importing inline we get the dependency on the window object..
+  useEffect(() => {
+    (async() => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const Calling = await import('@azure/communication-calling');
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const CallClient = (window as any)["azure-communication-calling"].CallClient;   
+    console.log(CallClient);
+    new CallClient();
+    })();
+  }, []);
+
   return (
     <div  id="mainContainer" className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -108,3 +117,7 @@ export default function Home() {
     </div>
   );
 }
+function initCallClient() {
+  throw new Error("Function not implemented.");
+}
+
